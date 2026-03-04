@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Intellectual Genealogy of Marxism</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:wght@300;400;600&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: #0a0a0a;
+      color: #e8e0d8;
+      font-family: 'Source Serif 4', Georgia, serif;
+      padding: 40px 20px;
+    }
+    #root { max-width: 800px; margin: 0 auto; }
+
+    .header { text-align: center; margin-bottom: 50px; }
+    .header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #C41E3A, #E8573A, #B8860B);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .header p {
+      font-size: 14px;
+      color: #777;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.04em;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 0 4px;
+    }
+    .section-bar {
+      width: 3px;
+      height: 28px;
+      border-radius: 2px;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .section-header p {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: #666;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .card {
+      cursor: pointer;
+      padding: 16px 20px;
+      border-radius: 6px;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      transition: all 0.25s ease;
+      margin-bottom: 8px;
+    }
+    .card.expanded { background: #1a1a1a; }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .card-name {
+      margin: 0;
+      font-size: 15px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .card-years {
+      font-size: 11px;
+      color: #777;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+    }
+    .card-tag {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .card-body {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #2a2a2a;
+      display: none;
+    }
+    .card.expanded .card-body { display: block; }
+    .card-summary {
+      margin: 0 0 12px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: #c8c0b8;
+      font-family: 'Source Serif 4', Georgia, serif;
+    }
+    .card-key {
+      margin: 0;
+      font-size: 11.5px;
+      color: #888;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+    }
+    .card-key span { font-weight: 600; }
+
+    /* Marx center card */
+    .marx-card {
+      cursor: pointer;
+      margin: 30px 0;
+      padding: 24px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #1a0a0e, #140606);
+      border: 2px solid #C41E3A;
+      box-shadow: 0 0 30px #C41E3A22;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .marx-card.expanded { background: linear-gradient(135deg, #1a0a0e, #180808); }
+    .marx-star {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #C41E3A;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .marx-card h2 {
+      margin: 0 0 4px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: #C41E3A;
+    }
+    .marx-card .subtitle {
+      margin: 0;
+      font-size: 13px;
+      color: #888;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .marx-body {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid #C41E3A33;
+      text-align: left;
+      display: none;
+    }
+    .marx-card.expanded .marx-body { display: block; }
+    .marx-body p.summary {
+      margin: 0 0 14px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #d0c8c0;
+    }
+    .marx-body p.key {
+      margin: 0;
+      font-size: 11.5px;
+      color: #888;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+    }
+    .marx-body p.key span { color: #C41E3A; font-weight: 600; }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #1a1a1a;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 11px;
+      color: #444;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+<div id="root">
+  <div class="header">
+    <h1>The Intellectual Genealogy of Marxism</h1>
+    <p>FROM HEGEL TO HARVEY — CLICK ANY THINKER TO EXPAND</p>
+  </div>
+
+  <!-- PRE-MARX SECTION -->
+  <div class="section-header">
+    <div class="section-bar" style="background: linear-gradient(to bottom, #B8860B, #A0522D);"></div>
+    <div>
+      <h2 style="color: #B8860B;">I. The Road to Marx</h2>
+      <p>German Philosophy · Classical Economics · Utopian Socialism</p>
+    </div>
+  </div>
+  <div id="pre-marx"></div>
+
+  <!-- MARX -->
+  <div class="marx-card" id="marx-card" onclick="this.classList.toggle('expanded')">
+    <div class="marx-star">★ THE SYNTHESIS ★</div>
+    <h2>Karl Marx</h2>
+    <p class="subtitle">1818–1883 · with Friedrich Engels (1820–1895)</p>
+    <div class="marx-body">
+      <p class="summary">Marx synthesized German philosophy (Hegel's dialectics), French socialism (utopian visions of a just society), and English political economy (Smith & Ricardo's labor theory of value) into a unified, revolutionary framework: historical materialism. He argued that history is driven by class struggle rooted in the material conditions of production, that capitalism generates its own gravediggers in the proletariat, and that communism is not an ideal to be realized but the real movement abolishing the present state of things.</p>
+      <p class="key"><span>KEY:</span> The Communist Manifesto (1848), Grundrisse (1857–58), Capital Vol. I (1867), The Eighteenth Brumaire (1852), Theses on Feuerbach (1845), The German Ideology (1846)</p>
+    </div>
+  </div>
+
+  <!-- POST-MARX SECTION -->
+  <div class="section-header">
+    <div class="section-bar" style="background: linear-gradient(to bottom, #C41E3A, #E74C3C);"></div>
+    <div>
+      <h2 style="color: #C41E3A;">II. After Marx</h2>
+      <p>Orthodoxy · Revolution · Western Marxism · Anti-Colonial Thought · Late Capitalism</p>
+    </div>
+  </div>
+  <div id="post-marx"></div>
+
+  <div class="footer">
+    <p>"The philosophers have only interpreted the world, in various ways; the point is to change it."<br>— Theses on Feuerbach, XI (1845)</p>
+  </div>
+</div>
+
+<script>
+const preMarx = [
+  { name: "Georg Wilhelm Friedrich Hegel", years: "1770–1831", tag: "Dialectical Idealism", color: "#B8860B", summary: "The single most important philosophical precursor to Marx. Hegel's dialectical method — thesis, antithesis, synthesis — provided the logical engine Marx would later 'flip on its head.' His philosophy of history as the unfolding of Spirit (Geist) toward freedom gave Marx the framework of history as a rational, directional process driven by internal contradictions. Without Hegel, there is no Marx.", key: "Phenomenology of Spirit (1807), Philosophy of Right (1820), Science of Logic (1812–16)" },
+  { name: "Ludwig Feuerbach", years: "1804–1872", tag: "Materialist Critique of Religion", color: "#CD853F", summary: "Feuerbach broke with Hegel by arguing that philosophy must begin with the material, sensuous human being — not abstract Spirit. His argument that God is a projection of human essence onto an alien being gave Marx the model for his theory of alienation. Marx credited Feuerbach with 'settling accounts' with Hegelian idealism, but criticized him for remaining too abstract and ahistorical.", key: "The Essence of Christianity (1841)" },
+  { name: "Adam Smith", years: "1723–1790", tag: "Classical Political Economy", color: "#8B6914", summary: "Smith's labor theory of value — that the value of a commodity is determined by the labor required to produce it — became the foundation Marx would radicalize. Smith also described the division of labor's dehumanizing effects, which Marx would develop into a full theory of alienation under capitalism. Marx saw Smith as brilliantly descriptive but ideologically limited.", key: "The Wealth of Nations (1776), The Theory of Moral Sentiments (1759)" },
+  { name: "David Ricardo", years: "1772–1823", tag: "Classical Political Economy", color: "#8B6914", summary: "Ricardo refined Smith's labor theory of value with greater rigor and exposed the inherent conflict between wages and profits. Marx built directly on Ricardo's framework to develop his theory of surplus value — the idea that capitalists extract unpaid labor from workers. Ricardo is the economic thinker Marx engaged with most technically.", key: "On the Principles of Political Economy and Taxation (1817)" },
+  { name: "Jean-Jacques Rousseau", years: "1712–1778", tag: "Social Contract & Inequality", color: "#6B4226", summary: "Rousseau's argument that private property is the origin of social inequality — 'The first person who, having enclosed a plot of land, took it into his head to say this is mine' — directly prefigures Marx's critique. His concept of the general will and the corruption of man by society influenced Marx's vision of human emancipation beyond bourgeois rights.", key: "Discourse on Inequality (1755), The Social Contract (1762)" },
+  { name: "Henri de Saint-Simon", years: "1760–1825", tag: "Utopian Socialism", color: "#A0522D", summary: "Saint-Simon envisioned a society organized by industrialists and scientists rather than aristocrats — a technocratic socialism. He identified the central conflict of modern society as between producers (industriels) and parasites (idlers). Marx and Engels credited him as a pioneer but criticized his utopianism for lacking a theory of class struggle and historical materialism.", key: "Letters from an Inhabitant of Geneva (1803), The New Christianity (1825)" },
+  { name: "Charles Fourier", years: "1772–1837", tag: "Utopian Socialism", color: "#A0522D", summary: "Fourier's radical critique of bourgeois civilization — including marriage, commerce, and monotonous labor — and his vision of 'attractive labor' in self-sustaining communities (phalansteries) influenced Marx's thinking on non-alienated work. Engels praised Fourier's satirical critique of capitalism as among the sharpest ever written, even while dismissing his utopian schemes.", key: "The Theory of the Four Movements (1808)" },
+  { name: "Robert Owen", years: "1771–1858", tag: "Utopian Socialism", color: "#A0522D", summary: "Owen was the practical utopian — a factory owner who created model communities with shorter hours, education, and cooperative stores. His New Lanark experiment proved that humane conditions could coexist with productivity. Marx respected Owen's practical demonstrations but argued that socialism couldn't be built one factory at a time; it required revolutionary transformation of the whole system.", key: "A New View of Society (1813), New Lanark experiments" },
+  { name: "Pierre-Joseph Proudhon", years: "1809–1865", tag: "Anarchism / Mutualism", color: "#704214", summary: "Proudhon's declaration that 'property is theft' electrified radical thought. He envisioned a decentralized socialism of small producers exchanging through mutual credit. Marx initially admired him, then savagely critiqued him in The Poverty of Philosophy (1847) for his shallow grasp of economics and dialectics. The Marx–Proudhon split prefigures the socialist–anarchist divide.", key: "What Is Property? (1840), System of Economic Contradictions (1846)" },
+  { name: "The Young Hegelians", years: "1830s–1840s", tag: "Left Hegelianism", color: "#B8860B", summary: "Bruno Bauer, Max Stirner, Arnold Ruge, and others took Hegel's dialectic in radical directions — critiquing religion, the Prussian state, and eventually all authority. Marx began as a Young Hegelian but broke with them, arguing in The German Ideology (1846) that they remained trapped in ideology, criticizing ideas rather than transforming material conditions.", key: "Various works 1835–1845; Marx's break in The German Ideology" },
+];
+
+const postMarx = [
+  { name: "Friedrich Engels", years: "1820–1895", tag: "Orthodox Marxism / Co-founder", color: "#8B0000", summary: "Marx's lifelong collaborator, financial supporter, and co-author. After Marx's death, Engels edited and published Capital Vols. II & III and systematized Marxism into a more rigid 'scientific' framework (dialectical materialism) that would profoundly shape how later generations understood Marx — for better and worse.", key: "Anti-Dühring (1878), Dialectics of Nature, The Origin of the Family (1884)" },
+  { name: "Vladimir Lenin", years: "1870–1924", tag: "Marxism-Leninism / Vanguardism", color: "#CC0000", summary: "Lenin adapted Marx to the conditions of semi-feudal Russia, arguing that a disciplined vanguard party was necessary to lead the proletariat. His theory of imperialism as the highest stage of capitalism extended Marx's analysis to the global stage. The 1917 Revolution made Marxism a state ideology for the first time, with all the contradictions that entailed.", key: "What Is to Be Done? (1902), Imperialism (1917), The State and Revolution (1917)" },
+  { name: "Rosa Luxemburg", years: "1871–1919", tag: "Revolutionary Democracy", color: "#DC143C", summary: "Luxemburg championed spontaneous mass action over Leninist vanguardism and insisted that socialism without democracy is no socialism at all. Her critique of reformism (against Bernstein) and her warnings about bureaucratic centralization (against Lenin) remain among the most powerful arguments within Marxism. Murdered by Freikorps paramilitaries in 1919.", key: "Reform or Revolution (1900), The Accumulation of Capital (1913), The Russian Revolution (1918)" },
+  { name: "Karl Kautsky", years: "1854–1938", tag: "Orthodox / Second International", color: "#A52A2A", summary: "The 'Pope of Marxism' in the Second International era, Kautsky was the leading theoretician of orthodox Marxism before WWI. He systematized Marx's economic theory and defended historical materialism as a science. Lenin later excoriated him as a 'renegade' for opposing the Bolshevik Revolution.", key: "The Economic Doctrines of Karl Marx (1887), The Dictatorship of the Proletariat (1918)" },
+  { name: "Eduard Bernstein", years: "1850–1932", tag: "Revisionism / Social Democracy", color: "#B22222", summary: "Bernstein argued that Marx's predictions of capitalism's imminent collapse were wrong and that socialism could be achieved through gradual parliamentary reform rather than revolution. This 'revisionism' split the socialist movement and laid the intellectual groundwork for modern social democracy. Luxemburg's Reform or Revolution was written as a direct rebuttal.", key: "Evolutionary Socialism (1899)" },
+  { name: "Antonio Gramsci", years: "1891–1937", tag: "Cultural Hegemony", color: "#E34234", summary: "Writing from Mussolini's prisons, Gramsci asked why revolution succeeded in Russia but failed in the West. His answer: cultural hegemony — the ruling class maintains power not just through force but through ideological consent manufactured via civil society (schools, churches, media). His concepts of hegemony, the organic intellectual, and war of position transformed Marxist strategy.", key: "Prison Notebooks (1929–35, published posthumously)" },
+  { name: "György Lukács", years: "1885–1971", tag: "Western Marxism / Reification", color: "#E8573A", summary: "Lukács revived the Hegelian dimension of Marx against the positivist drift of orthodox Marxism. His concept of reification — how commodity relations transform all human activity into thing-like objects — and his theory of class consciousness as a historical achievement (not automatic) were foundational for Western Marxism and the Frankfurt School.", key: "History and Class Consciousness (1923)" },
+  { name: "The Frankfurt School", years: "1920s–1970s", tag: "Critical Theory", color: "#E06040", summary: "Horkheimer, Adorno, Marcuse, and Benjamin fused Marx with Freud and Weber to analyze how capitalism colonizes not just labor but consciousness itself — through the culture industry, instrumental reason, and administered society. They asked the devastating question: what if the working class has been so thoroughly integrated into capitalism that it can no longer serve as the revolutionary subject?", key: "Dialectic of Enlightenment (1944), One-Dimensional Man (1964), The Work of Art in the Age of Mechanical Reproduction (1935)" },
+  { name: "Mao Zedong", years: "1893–1976", tag: "Maoism / Peasant Revolution", color: "#FF2400", summary: "Mao adapted Marxism-Leninism to agrarian China, placing the peasantry rather than the urban proletariat at the center of revolutionary struggle. His theories of protracted people's war, the mass line, and continuous revolution (culminating in the Cultural Revolution) created a distinct tradition that influenced anti-colonial movements across the Global South.", key: "On Contradiction (1937), On Practice (1937), Quotations (1964)" },
+  { name: "Leon Trotsky", years: "1879–1940", tag: "Permanent Revolution", color: "#D32F2F", summary: "Trotsky's theory of permanent revolution argued that in 'backward' countries, the bourgeois-democratic and socialist revolutions must be fused into a single continuous process. His critique of Stalinist bureaucracy as a degenerated workers' state and his insistence on internationalism against 'socialism in one country' created an enduring counter-tradition within Marxism.", key: "The Permanent Revolution (1930), The Revolution Betrayed (1936), History of the Russian Revolution (1930)" },
+  { name: "Louis Althusser", years: "1918–1990", tag: "Structural Marxism", color: "#C0392B", summary: "Althusser argued for an 'epistemological break' in Marx's work — separating the early humanist Marx from the mature scientific Marx of Capital. His theory of ideological state apparatuses (ISAs) and the concept of interpellation (how ideology 'hails' subjects into existence) profoundly influenced structuralism, post-structuralism, and cultural studies.", key: "For Marx (1965), Reading Capital (1965), Ideology and Ideological State Apparatuses (1970)" },
+  { name: "Frantz Fanon", years: "1925–1961", tag: "Anti-Colonial Marxism", color: "#E74C3C", summary: "Fanon fused Marxism with anti-colonial psychology, arguing that colonialism produces not just economic exploitation but psychic violence and dehumanization. He placed the colonized peasantry and lumpenproletariat — groups Marx had largely dismissed — at the center of revolutionary agency. His work bridges Marxism, existentialism, and what would become postcolonial theory.", key: "The Wretched of the Earth (1961), Black Skin, White Masks (1952)" },
+  { name: "C.L.R. James", years: "1901–1989", tag: "Black Marxism / Caribbean Radicalism", color: "#E55B3C", summary: "James's masterwork on the Haitian Revolution demonstrated that enslaved people were historical agents who made their own revolution — not passive recipients of European Enlightenment ideas. He brought race, empire, and the Black Atlantic into the core of Marxist historiography and insisted on the self-activity of the oppressed against all forms of vanguardism.", key: "The Black Jacobins (1938), Notes on Dialectics (1948)" },
+  { name: "Guy Debord", years: "1931–1994", tag: "Situationism / Spectacle", color: "#FF6347", summary: "Debord argued that capitalism had evolved from a society of production to a 'society of the spectacle' — where lived experience is replaced by its representation. The Situationist International's fusion of Marxist critique with avant-garde cultural practice influenced May '68, punk, and contemporary media criticism.", key: "The Society of the Spectacle (1967)" },
+  { name: "Jürgen Habermas", years: "1929–present", tag: "Communicative Reason / Late Frankfurt School", color: "#E07050", summary: "Habermas reconstructed critical theory on new foundations, arguing that the emancipatory potential of modernity lies not in the proletariat but in communicative rationality — the human capacity for undistorted dialogue oriented toward mutual understanding. His public sphere concept and discourse ethics extend the Marxist project while largely abandoning its revolutionary politics.", key: "The Structural Transformation of the Public Sphere (1962), Theory of Communicative Action (1981)" },
+  { name: "Fredric Jameson", years: "1934–2024", tag: "Cultural Marxism / Postmodernism", color: "#D35400", summary: "Jameson mapped the cultural logic of late capitalism, arguing that postmodernism is not a style choice but the cultural expression of a new stage of capitalist development (multinational/finance capital). His insistence on 'always historicize!' and his Marxist readings of literature, film, and architecture made him the preeminent Marxist cultural critic of the late 20th century.", key: "Postmodernism, or, The Cultural Logic of Late Capitalism (1991), The Political Unconscious (1981)" },
+  { name: "David Harvey", years: "1935–present", tag: "Spatial Marxism / Geography of Capital", color: "#CB4335", summary: "Harvey brought Marx's Capital into conversation with geography, arguing that capitalism survives crises through 'spatial fixes' — the constant reorganization of space through urbanization, gentrification, and uneven development. His accessible lectures on Capital have introduced Marx's economic theory to a new generation.", key: "The Limits to Capital (1982), A Brief History of Neoliberalism (2005), Companion to Marx's Capital (2010)" },
+];
+
+function renderCards(data, containerId) {
+  const container = document.getElementById(containerId);
+  data.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => card.classList.toggle('expanded');
+    card.innerHTML = `
+      <div class="card-top">
+        <h3 class="card-name" style="color: ${t.color};">${t.name}</h3>
+        <span class="card-years">${t.years}</span>
+      </div>
+      <span class="card-tag" style="background: ${t.color}18; color: ${t.color}; border: 1px solid ${t.color}30;">${t.tag}</span>
+      <div class="card-body">
+        <p class="card-summary">${t.summary}</p>
+        <p class="card-key"><span style="color: ${t.color};">KEY:</span> ${t.key}</p>
+      </div>
+    `;
+    // Update border color on expand
+    const observer = new MutationObserver(() => {
+      card.style.borderColor = card.classList.contains('expanded') ? t.color : '#2a2a2a';
+    });
+    observer.observe(card, { attributes: true, attributeFilter: ['class'] });
+    container.appendChild(card);
+  });
+}
+
+renderCards(preMarx, 'pre-marx');
+renderCards(postMarx, 'post-marx');
+</script>
+</body>
+</html>
